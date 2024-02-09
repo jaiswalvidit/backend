@@ -17,7 +17,7 @@ router.post("/sendotp", async (req, res) => {
 
         if (preuser) {
             // Generate OTP
-            const otp = Math.floor(100000+ Math.random() * 900000);
+            const otp = Math.floor(100000 + Math.random() * 900000);
 
             // Save OTP to the database
             await Otp.findOneAndUpdate({ email }, { otp }, { upsert: true });
@@ -67,12 +67,12 @@ router.post("/verifyotp", async (req, res) => {
     try {
         const otpVerification = await Otp.findOne({ email });
         if (otpVerification && otpVerification.otp == otp) {
-            // OTP is verified successfully
             res.json({ message: "OTP verified successfully" });
         } else {
             res.status(400).json({ error: "Invalid OTP" });
         }
     } catch (error) {
+        console.error('Error verifying OTP:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
