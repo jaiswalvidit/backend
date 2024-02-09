@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose; 
-const bcrypt=require('bcryptjs');
-const jwt=require('jwttoken');
-const SECRET_KEY="AACC";
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); // Correct import
+const SECRET_KEY = "AACC";
+
 const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique:true
+    unique: true
   },
   email: {
     type: String,
     required: true,
-    unique:true
+    unique: true
   },
   password: {
     type: String,
@@ -30,26 +31,25 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tokens:[
-    {token:{
-      type:String,
-      required:true,
-    }}
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      }
+    }
   ]
-},{timestamps:true});
+}, { timestamps: true });
 
-UserSchema.methods.generateAuthToken=async function()
-{
+UserSchema.methods.generateAuthToken = async function() {
   try {
-    let newToken=jwt.sign({_id:this._id},SECRET_KEY,{expiresIn:"1d"});
-
+    const newToken = jwt.sign({ _id: this._id }, SECRET_KEY, { expiresIn: "1d" });
+    this.tokens = this.tokens.concat({ token: newToken });
+    await this.save();
+    return newToken;
   } catch (error) {
-    res.status(400).json({error:"Invalid details"});
+    throw new Error("Error generating token"); // Throw error instead of sending response
   }
-
-  this.tokens=this.tokens.concat({token:newToken});
-  await this.save();
-  return newToken;
 }
 
-module.exports = mongoose.model('User',UserSchema);
+module.exports = mongoose.model('User', UserSchema);
