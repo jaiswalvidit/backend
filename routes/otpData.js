@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Otp = require('../models/otp');
 const nodemailer = require('nodemailer'); // Import nodemailer for sending emails
-const users=require('../models/user');
+const User = require('../models/user');
 
 router.post("/sendotp", async (req, res) => {
     const { email } = req.body;
@@ -13,14 +13,14 @@ router.post("/sendotp", async (req, res) => {
         }
 
         // Check if the user with the provided email exists in the database
-        const preuser = await users.findOne({ email: email });
+        const preuser = await User.findOne({ email });
 
         if (preuser) {
             // Generate OTP
             const otp = Math.floor(100000+ Math.random() * 900000);
 
             // Save OTP to the database
-            await Otp.findOneAndUpdate({ email: email }, { otp: otp }, { upsert: true });
+            await Otp.findOneAndUpdate({ email }, { otp }, { upsert: true });
 
             // Send OTP to user's email
             const transporter = nodemailer.createTransport({
@@ -57,24 +57,24 @@ router.post("/sendotp", async (req, res) => {
 });
 
 
-router.get("/sendotp",async(req,res)=>{
+router.post("/verifyotp", async (req, res) => {
+    const { email, otp } = req.body;
+    
+    if (!otp || !email) {
+        return res.status(400).json({ error: "Please provide your OTP and Email" });
+    }
 
-    const {email,otp}=req.body;
-    if(!otp || !email)
-    res.status(400).json({error:"Please enter Your Otp and Email"});
     try {
-        const otpverification=await Otp.findOne({email:email});
-        if(otpverification.otp==otp)
-        {
-
-        }
-        else 
-        {
-            res.status(400).json({error:"Invalid Otp"});
+        const otpVerification = await Otp.findOne({ email });
+        if (otpVerification && otpVerification.otp == otp) {
+            // OTP is verified successfully
+            res.json({ message: "OTP verified successfully" });
+        } else {
+            res.status(400).json({ error: "Invalid OTP" });
         }
     } catch (error) {
-        res.status(400).json({error:"Invalid details",error});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-})
+});
 
 module.exports = router;
