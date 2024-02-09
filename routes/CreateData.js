@@ -63,15 +63,12 @@ router.post('/loginuser', async (req, res) => {
       console.log('Incorrect password for user:', req.body.email);
       return res.status(400).json({ errors: 'Try logging in with correct password' });
     }
-
     const payload = {
       user: {
         id: userData.id,
       },
     };
-
     const authToken = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
-
     console.log('User logged in:', req.body.name);
     res.json({ success: true, authToken: authToken });
   } catch (error) {
@@ -79,11 +76,4 @@ router.post('/loginuser', async (req, res) => {
     res.status(500).json({ success: false, error: 'Server Error' });
   }
 });
-
-router.get('/createuser',async(req,res)=>{
-  const data=await User.findOne({email})
-res.json(data);
-})
-
-
 module.exports = router;

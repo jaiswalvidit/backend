@@ -13,27 +13,23 @@ router.post("/sendotp", async (req, res) => {
         }
 
         // Check if the user with the provided email exists in the database
-        const preuser = await User.findOne({ email });
+        const preuser = await User.findOne({email});
 
         if (preuser) {
-            // Generate OTP
+            
             const otp = Math.floor(100000 + Math.random() * 900000);
-
-            // Save OTP to the database
             await Otp.findOneAndUpdate({ email }, { otp }, { upsert: true });
-
-            // Send OTP to user's email
             const transporter = nodemailer.createTransport({
                 // Configure nodemailer with your email service provider
                 service: 'gmail',
                 auth: {
-                    user: 'your_email@gmail.com', // Your email address
-                    pass: 'your_password' // Your email password or app password
+                    user: 'pj441595@gmail.com', // Your email address
+                    pass: 'Vidit121@' // Your email password or app password
                 }
             });
 
             const mailOptions = {
-                from: 'your_email@gmail.com', // Sender email address
+                from: 'pj441595@gmail.com', // Sender email address
                 to: email, // Recipient email address
                 subject: 'Your OTP for Verification', // Email subject
                 text: `Your OTP is ${otp}.` // Email body with OTP
