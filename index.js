@@ -21,7 +21,7 @@ app.use('/api/auth/', require('./routes/Restaurant'));
 app.use('/api/auth/', require('./routes/ItemData'));
 app.use('/api', require('./routes/OrderData'));
 app.use('/api',require('./routes/Review'));
-
+app.use('/api',require('./routes/otpData'));
 const port = process.env.PORT || 6000;
 
 app.post('/api/create-checkout-session', async (req, res) => {
@@ -32,7 +32,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
     if (typeof products === 'object' && !Array.isArray(products)) {
       products = [products];
     }
-
     // Check if products is an array and is not empty
     if (!Array.isArray(products) || products.length === 0) {
       return res.status(400).json({ message: 'Invalid or empty products array' });
