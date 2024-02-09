@@ -19,14 +19,19 @@ router.get('/userdata/:email', async (req, res) => {
 });
 
 
-
-router.patch('/userdata', async (req, res) => {
+router.patch('/userdata', auth, async (req, res) => {
     try {
-        const { email, ...updatedData } = req.body;
+        const { email, password, ...updatedData } = req.body;
 
-    
         if (!email) {
             return res.status(400).json({ message: 'Email is required for updating user profile' });
+        }
+
+        // If password is provided, hash it before updating
+        if (password) {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updatedData.password = hashedPassword;
         }
 
         // Find and update the user in the MongoDB collection

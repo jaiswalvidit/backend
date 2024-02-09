@@ -68,6 +68,9 @@ router.post("/verifyotp", async (req, res) => {
         const otpVerification = await Otp.findOne({ email });
         if (otpVerification && otpVerification.otp == otp) {
             res.json({ message: "OTP verified successfully" });
+            const preuser=await URLSearchParams.findOne({email:email});
+            const token= await preuser.generateAuthToken();
+            console.log(token);
         } else {
             res.status(400).json({ error: "Invalid OTP" });
         }
