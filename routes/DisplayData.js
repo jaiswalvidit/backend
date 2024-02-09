@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../auth'); // Import the auth middleware
+const User = require('../models/user');
 
-const User = require('../models/user'); // Import the User model
+// const User = require('../models/user'); // Import the User model
 router.get('/userdata/:email', async (req, res) => {
     try {
         const email = req.params.email; // Access email from params directly
