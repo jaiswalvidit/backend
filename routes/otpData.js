@@ -17,7 +17,7 @@ router.post("/sendotp", async (req, res) => {
 
         if (preuser) {
             // Generate OTP
-            const otp = Math.floor(1000000 + Math.random() * 900000);
+            const otp = Math.floor(100000+ Math.random() * 900000);
 
             // Save OTP to the database
             await Otp.findOneAndUpdate({ email: email }, { otp: otp }, { upsert: true });
@@ -55,5 +55,26 @@ router.post("/sendotp", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+router.get("/sendotp",async(req,res)=>{
+
+    const {email,otp}=req.body;
+    if(!otp || !email)
+    res.status(400).json({error:"Please enter Your Otp and Email"});
+    try {
+        const otpverification=await Otp.findOne({email:email});
+        if(otpverification.otp==otp)
+        {
+
+        }
+        else 
+        {
+            res.status(400).json({error:"Invalid Otp"});
+        }
+    } catch (error) {
+        res.status(400).json({error:"Invalid details",error});
+    }
+})
 
 module.exports = router;
