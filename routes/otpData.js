@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const Otp = require('../models/otp');
-const nodemailer = require('nodemailer'); // Import nodemailer for sending emails
+const nodemailer = require('nodemailer'); 
+
 const User = require('../models/user');
 
 router.post("/sendotp", async (req, res) => {
@@ -23,18 +25,26 @@ router.post("/sendotp", async (req, res) => {
                 // Configure nodemailer with your email service provider
                 service: 'gmail',
                 auth: {
-                    user: 'pj441595@gmail.com', // Your email address
-                    pass: 'Vidit121@' // Your email password or app password
+                    user:process.env.EMAIL,
+                    pass: process.env.APP_PASSWORD,
                 }
             });
 
             const mailOptions = {
                 from: 'pj441595@gmail.com', // Sender email address
                 to: email, // Recipient email address
-                subject: 'Your OTP for Verification', // Email subject
+                subject: 'Send email using nodemailer and gmail', // Email subject
                 text: `Your OTP is ${otp}.` // Email body with OTP
             };
 
+
+            const sendMail=async(transporter,mailOptions)=>{
+                try {
+                    await transporter.sendMail(mailOptions);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.error('Error sending email:', error);
