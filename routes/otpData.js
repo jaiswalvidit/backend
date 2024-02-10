@@ -31,7 +31,7 @@ router.post("/sendotp", async (req, res) => {
             });
 
             const mailOptions = {
-                from: 'pj441595@gmail.com', // Sender email address
+                from: process.env.EMAIL, // Sender email address
                 to: email, // Recipient email address
                 subject: 'Send email using nodemailer and gmail', // Email subject
                 text: `Your OTP is ${otp}.` // Email body with OTP
@@ -74,7 +74,7 @@ router.post("/verifyotp", async (req, res) => {
         const otpVerification = await Otp.findOne({ email });
         if (otpVerification && otpVerification.otp == otp) {
             res.json({ message: "OTP verified successfully" });
-            const preuser=await URLSearchParams.findOne({email:email});
+            const preuser=await User.findOne({email});
             const token= await preuser.generateAuthToken();
             console.log(token);
         } else {
