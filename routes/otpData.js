@@ -73,19 +73,22 @@ router.post("/verifyotp", async (req, res) => {
     try {
         const otpVerification = await Otp.findOne({ email });
         if (otpVerification && otpVerification.otp == otp) {
-            res.json({ message: "OTP verified successfully" });
-            const preuser=await User.findOne({email});
-            console.log(preuser);
+            const preuser = await User.findOne({ email });
 
-            const token= await preuser.generateAuthToken();
-            console.log(token);
-            res.status(200).json({message:"user login successfully",userToken:token});
+            // Generate a new token for the user
+            const token = await preuser.generateAuthToken();
+
+            // Clear OTP from the database
+            await Otp.deleteOne({ email });
+
+            // Send the token as a response
+            return res.status(200).json({ message: "OTP verified successfully", userToken: token });
         } else {
-            res.status(400).json({ error: "Invalid OTP" });
+            return res.status(400).json({ error: "Invalid OTP" });
         }
     } catch (error) {
         console.error('Error verifying OTP:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
