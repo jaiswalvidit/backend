@@ -19,40 +19,19 @@ router.get('/userdata/:email', async (req, res) => {
         res.status(500).json({ message: 'Error fetching user data', error: error.message });
     }
 });
-
-
 router.patch('/auth/userdata', auth, async (req, res) => {
+    const { newPassword } = req.body;
+    const user = req.user; // User object extracted from auth middleware
+
     try {
-        const { email,key,password } = req.body;
-        console.log(email);
-        console.log(key);
-        console.log(password);
-        if (!email) {
-            return res.status(400).json({ message: 'Email is required for updating user profile' });
-        }
-
-        // If password is provided, hash it before updating
-        if (password) {
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
-            updatedData.password = hashedPassword;
-        }
-
-        // Find and update the user in the MongoDB collection
-        const updatedUser = await User.findOneAndUpdate(
-            { email },
-            { $set: updatedData },
-            { new: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.json(updatedUser);
+        // Set the new password for the user
+        user.password = newPassword;
+        // Save the updated user object with the new password
+        await user.save();
+        res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
-        console.error('Error updating user profile:', error);
-        res.status(500).json({ message: 'Error updating user profile', error: error.message });
+        console.error('Error updating password:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
