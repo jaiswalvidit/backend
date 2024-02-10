@@ -21,7 +21,7 @@ router.get('/userdata/:email', async (req, res) => {
 });
 
 
-router.patch('/userdata', auth, async (req, res) => {
+router.patch('/auth/userdata', auth, async (req, res) => {
     try {
         const { email,key,password } = req.body;
         console.log(email);
