@@ -23,8 +23,10 @@ router.get('/userdata/:email', async (req, res) => {
 
 router.patch('/userdata', auth, async (req, res) => {
     try {
-        const { email, password, ...updatedData } = req.body;
-
+        const { email,key,password } = req.body;
+        console.log(email);
+        console.log(key);
+        console.log(password);
         if (!email) {
             return res.status(400).json({ message: 'Email is required for updating user profile' });
         }
