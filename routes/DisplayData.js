@@ -42,4 +42,10 @@ router.patch('/auth/userdata', auth, async (req, res) => {
     }
 });
 
+router.patch('/user',async(req,res)=>{
+    const {email}=req.body;
+    const user=await User.find({email});
+    res.send(user);
+})
+
 module.exports = router;
