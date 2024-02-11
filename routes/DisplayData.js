@@ -58,7 +58,7 @@ router.patch('/user', async (req, res) => {
         }
 
         await user.save();
-        res.status(200).json({ message: 'User data updated successfully' });
+        res.status(200).json({ message: 'User data updated successfully',user });
     } catch (error) {
         console.error('Error updating user data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
