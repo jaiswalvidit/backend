@@ -47,10 +47,14 @@ router.patch('/user', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        user.name=newData.name;
-        user.phone=newData.phone;
-        // Update user data here based on newData object
-        // Example: user.name = newData.name;
+
+        // Update user data based on newData object
+        if (newData.name) {
+            user.name = newData.name;
+        }
+        if (newData.phone) {
+            user.phone = newData.phone;
+        }
 
         await user.save();
         res.status(200).json({ message: 'User data updated successfully' });
