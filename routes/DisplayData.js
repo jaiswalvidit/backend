@@ -24,6 +24,8 @@ router.patch('/auth/userdata', auth, async (req, res) => {
     const { password } = req.body;
     const user = req.user; 
     console.log(password);
+    console.log(user);
+    console.log(user.password);
 
     try {
         // Set the new password for the user
