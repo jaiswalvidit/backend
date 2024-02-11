@@ -20,9 +20,10 @@ router.get('/userdata/:email', async (req, res) => {
     }
 });
 router.patch('/auth/userdata', auth, async (req, res) => {
-    const { newPassword } = req.body;
+    console.log(req.body);
+    const { password } = req.body;
     const user = req.user; 
-    console.log(newPassword);
+    console.log(password);
 
     try {
         // Set the new password for the user

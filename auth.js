@@ -27,7 +27,7 @@ const auth = async (req, res, next) => {
 
     // Attach the user object and token to the request
     req.user = user;
-    console.log(req.user);
+    // console.log(req.user);
     console.log(user.token);
     req.token = token;
     next();
