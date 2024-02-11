@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
     }
 
     // Find the user by the decoded token's ID
-    const user = await User.findOne({'token': token });
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
 
     if (!user) {
       throw new Error('User not able to find');
