@@ -25,6 +25,7 @@ router.post('/userdata', async (req, res) => {
 router.patch('/auth/userdata', auth, async (req, res) => {
     try {
         const { password } = req.body;
+        
         const user = req.user; // Assuming auth middleware sets req.user
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,12 +38,11 @@ router.patch('/auth/userdata', auth, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 // PATCH endpoint for updating user data (email-based)
 router.patch('/user', async (req, res) => {
     try {
-        const { email, name, phone } = req.body; // Destructure email, name, and phone from req.body
-        console.log(email, name, phone); // Corrected typo: "conseole" to "console"
+        const { email, name, phone, location } = req.body; // Destructure email, name, phone, and location from req.body
+        console.log(email, name, phone, location); // Corrected typo: "conseole" to "console"
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -53,17 +53,21 @@ router.patch('/user', async (req, res) => {
         if (name) { // Changed condition to check if name is provided
             user.name = name; // Updated user's name
         }
+        if (location) { // Check if location is provided
+            user.locations.push(location); // Push location into the locations array
+        }
         if (phone) { // Changed condition to check if phone is provided
             user.phone = phone; // Updated user's phone
         }
 
         await user.save();
 
-        res.status(200).json({ message: 'User data updated successfully',Data:user });
+        res.status(200).json({ message: 'User data updated successfully', Data: user });
     } catch (error) {
         console.error('Error updating user data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 module.exports = router;
