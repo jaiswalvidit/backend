@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('./models/user');
 
 const auth = async (req, res, next) => {
   try {
@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
     }
 
     // Find the user by the decoded token's ID
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
+    const user = await User.findOne({'token': token });
 
     if (!user) {
       throw new Error('User not able to find');
@@ -25,6 +25,8 @@ const auth = async (req, res, next) => {
 
     // Attach the user object and token to the request
     req.user = user;
+    console.log(req.user);
+    console.log(user.token);
     req.token = token;
     next();
   } catch (error) {
