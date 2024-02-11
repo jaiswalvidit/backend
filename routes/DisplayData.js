@@ -41,7 +41,7 @@ router.patch('/auth/userdata', auth, async (req, res) => {
 // PATCH endpoint for updating user data (email-based)
 router.patch('/user', async (req, res) => {
     try {
-        const { email, newData } = req.body;
+        const { email,name,phone } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -49,10 +49,10 @@ router.patch('/user', async (req, res) => {
         }
 
         // Update user data based on newData object
-        if (newData.name) {
+        if (!name) {
             user.name = newData.name;
         }
-        if (newData.phone) {
+        if (!phone) {
             user.phone = newData.phone;
         }
 
