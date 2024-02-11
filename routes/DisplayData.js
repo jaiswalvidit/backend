@@ -21,7 +21,8 @@ router.get('/userdata/:email', async (req, res) => {
 });
 router.patch('/auth/userdata', auth, async (req, res) => {
     const { newPassword } = req.body;
-    const user = req.user; // User object extracted from auth middleware
+    const user = req.user; 
+    console.log(newPassword);
 
     try {
         // Set the new password for the user
