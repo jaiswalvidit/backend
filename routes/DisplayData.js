@@ -54,7 +54,7 @@ router.patch('/user', async (req, res) => {
             user.name = name; // Updated user's name
         }
         if (location) { // Check if location is provided
-            user.location.push(location); // Push location into the locations array
+            user.location=location; // Push location into the locations array
         }
         if (phone) { // Changed condition to check if phone is provided
             user.phone = phone; // Updated user's phone
