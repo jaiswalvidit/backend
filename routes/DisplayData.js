@@ -29,7 +29,7 @@ router.patch('/auth/userdata', auth, async (req, res) => {
 
     try {
         // Set the new password for the user
-        user.password = newPassword;
+        user.password = password;
         // Save the updated user object with the new password
         await user.save();
         res.status(200).json({ message: 'Password updated successfully' });
