@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 const auth = require('../auth'); // Import the auth middleware
 const User = require('../models/user');
@@ -24,12 +25,14 @@ router.patch('/auth/userdata', auth, async (req, res) => {
     const { password } = req.body;
     const user = req.user; 
     console.log(password);
+
     console.log(user);
     console.log(user.password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
         // Set the new password for the user
-        user.password = password;
+        user.password = hashedPassword;
         // Save the updated user object with the new password
         await user.save();
         res.status(200).json({ message: 'Password updated successfully' });
