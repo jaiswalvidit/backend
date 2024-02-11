@@ -1,26 +1,35 @@
-// auth.js
-
 const jwt = require('jsonwebtoken');
-const jwtSecret = 'your_secret_key'; // Replace with your actual secret key
+const User = require('../models/user');
 
-const auth = (req, res, next) => {
-  // Get token from request header
-  const token = req.header('Authorization');
-
-  // Check if token is present
-  if (!token) {
-    return res.status(401).json({ message: 'Authorization denied. Token not found.' });
-  }
-
+const auth = async (req, res, next) => {
   try {
-    // Verify token
-    const decoded = jwt.verify(token, jwtSecret);
+   
+    const token = req.header('Authorization').replace('Bearer ', '');
+    console.log(token);
+    if (!token) {
+      throw new Error('Authentication failed');
+    }
 
-    // Add user from payload to request object
-    req.user = decoded.user;
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      throw new Error('Conversion is not able to process');
+    }
+
+    // Find the user by the decoded token's ID
+    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
+
+    if (!user) {
+      throw new Error('User not able to find');
+    }
+
+    // Attach the user object and token to the request
+    req.user = user;
+    req.token = token;
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid token.' });
+    console.error('Authentication error:', error.message);
+    res.status(401).json({ error: 'Authentication failed' });
   }
 };
 

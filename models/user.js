@@ -31,24 +31,22 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tokens: [
-    {
+  
       token: {
         type: String,
         required: true,
       }
-    }
-  ]
+   ,
 }, { timestamps: true });
 
 UserSchema.methods.generateAuthToken = async function() {
-  try {
-    const newToken = jwt.sign({ _id: this._id.toString() }, SECRET_KEY, { expiresIn: "1d" }); // Convert _id to string
-    this.tokens = this.tokens.concat({ token: newToken });
-    await this.save();
-    return newToken;
-  } catch (error) {
-    throw new Error("Error generating token"); // Throw error instead of sending response
+  UserSchema.methods.generateAuthToken = async function() {
+    try {
+      const newToken = jwt.sign({ _id: this._id.toString() }, SECRET_KEY, { expiresIn: "1d" }); // Convert _id to string
+      return newToken;
+    } catch (error) {
+      throw new Error("Error generating token");
+    }
   }
 }
 
