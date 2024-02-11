@@ -11,18 +11,19 @@ const auth = async (req, res, next) => {
     }
 
     // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    if (!decoded) {
-      throw new Error('Conversion is not able to process');
-    }
+    // if (!decoded) {
+    //   throw new Error('Conversion is not able to process');
+    // }
 
     // Find the user by the decoded token's ID
-    const user = await User.findOne({'tokens.token': token });
+    const user = await User.findOne({'token': token });
 
     if (!user) {
       throw new Error('User not able to find');
     }
+    console.log("user found");
 
     // Attach the user object and token to the request
     req.user = user;
