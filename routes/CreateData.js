@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const jwtSecret = 'MynameisviditLetsdddddd';
+const jwtSecret = process.env.JWTSECRET;
 
 // Validation middleware for user creation
 const validateUserCreation = [

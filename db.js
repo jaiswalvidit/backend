@@ -5,10 +5,15 @@ const mongoURL =process.env.mongoURL;
 
 const MongoDb = async () => {
   try {
-    await mongoose.connect(mongoURL);
-    console.log('Connected to Mongodb');
+    await mongoose.connect(mongoURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      // Other options if needed
+    });
+    console.log('Connected to MongoDB');
   } catch (err) {
-    console.error('Error connecting to MongoDB:', err);
+    console.error('Error connecting to MongoDB:', err.message);
+    process.exit(1); // Exit the process with a non-zero status code indicating failure
   }
 };
 module.exports = MongoDb;
