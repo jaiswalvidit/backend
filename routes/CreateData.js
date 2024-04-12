@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const jwtSecret = process.env.JWTSECRET;
+const jwtSecret = process.env.JWT_SECRET;
 
 // Validation middleware for user creation
 const validateUserCreation = [
@@ -57,6 +57,7 @@ router.post('/createuser', validateUserCreation, async (req, res) => {
 router.post('/loginuser', async (req, res) => {
   console.log(req.body);
   console.log(jwtSecret);
+
   try {
     
     const userData = await User.findOne({ email: req.body.email });
