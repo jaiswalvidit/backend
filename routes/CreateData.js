@@ -55,7 +55,9 @@ router.post('/createuser', validateUserCreation, async (req, res) => {
 
 // User login route (no authentication required)
 router.post('/loginuser', async (req, res) => {
+  console.log(req.body);
   try {
+    
     const userData = await User.findOne({ email: req.body.email });
     console.log(userData);
     if (!userData) {
