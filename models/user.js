@@ -33,7 +33,7 @@ const UserSchema = new Schema({
   },
   token: {
     type: String,
-    required: true,
+    // required: true,
   } // Removed the extra comma here
 }, { timestamps: true });
 
