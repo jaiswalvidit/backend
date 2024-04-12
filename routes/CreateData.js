@@ -21,16 +21,22 @@ const validateUserCreation = [
 ];
 
 router.post('/createuser', validateUserCreation, async (req, res) => {
+  console.log(req.body);
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log('Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
-
+    const exist=await User.findOne({email:req.body.email});
+    if(exist)
+    {
+      return res.status(404).json({message:'Email already eixsts'});
+    }
+    console.log(req.body);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
+      
     const newUser = await User.create({
       name: req.body.name,
       password: hashedPassword,
