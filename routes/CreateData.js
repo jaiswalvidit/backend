@@ -57,7 +57,7 @@ router.post('/createuser', validateUserCreation, async (req, res) => {
 router.post('/loginuser', async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
-
+    console.log(userData);
     if (!userData) {
       console.log('User not found for email:', req.body.email);
       return res.status(400).json({ errors: 'Try logging in with correct credentials' });
@@ -71,7 +71,7 @@ router.post('/loginuser', async (req, res) => {
     }
     const payload = {
       user: {
-        id: userData.id,
+        _id: userData._id,
       },
     };
     const authToken = jwt.sign(payload, jwtSecret, { expiresIn: '1h' });
