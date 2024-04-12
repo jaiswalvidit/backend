@@ -56,6 +56,7 @@ router.post('/createuser', validateUserCreation, async (req, res) => {
 // User login route (no authentication required)
 router.post('/loginuser', async (req, res) => {
   console.log(req.body);
+  console.log(jwtSecret);
   try {
     
     const userData = await User.findOne({ email: req.body.email });
